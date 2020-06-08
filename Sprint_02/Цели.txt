@@ -1,0 +1,37 @@
+# Функция для определения возрастной группы
+def age_group(row):
+        """
+        Возвращает возрастную группу по значению прожитых лет age и полу gender, используя правила:
+        - 'взрослые' при значениии (gender = 'M' и age от 19 до 61) или (gender = 'F' и age от 19 до 56)
+        - 'пенсионеры' во всех остальных случаях
+        """
+        age = row['age']
+        gender = row['gender']
+        
+        if (age <= 61 and gender == 'M') or (age <= 56 and gender == 'F'):
+                return 'взрослые'
+        return 'пенсионеры'
+data['age_group'] = data.apply(age_group, axis=1)
+
+
+# Тесты для функции age_group
+row_values = [56, 'F']
+row_columns = ['age', 'gender']
+row = pd.Series(data=row_values, index=row_columns)
+print(age_group(row), row[0], row[1])
+row_values = [57, 'F']
+row_columns = ['age', 'gender']
+row = pd.Series(data=row_values, index=row_columns)
+print(age_group(row), row[0], row[1])
+row_values = [60, 'M']
+row_columns = ['age', 'gender']
+row = pd.Series(data=row_values, index=row_columns)
+print(age_group(row), row[0], row[1])
+row_values = [65, 'M']
+row_columns = ['age', 'gender']
+row = pd.Series(data=row_values, index=row_columns)
+print(age_group(row), row[0], row[1])
+
+
+adult_days_employed_avg = data[(data['age_group'] == 'взрослые') & (data['days_employed'] > 0)].sort_values(by='days_employed')
+print(adult_days_employed_avg.head(10))
